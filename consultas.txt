@@ -1,0 +1,69 @@
+/* CONSULTA 1 */
+SELECT COUNT(*) AS 'total' FROM usairlineflights2.flights;
+
+/* CONSULTA 2 */
+SELECT
+	Origin,
+    AVG(ArrDelay) AS 'prom_arribades',
+    AVG(DepDelay) AS 'prom_sortides'
+FROM usairlineflights2.flights
+GROUP BY Origin;
+
+/* CONSULTA 3 */
+SELECT
+	Origin,
+    colYear,
+    colMonth,
+    AVG(ArrDelay) AS 'prom_arribades'
+FROM usairlineflights2.flights
+GROUP BY Origin,colYear,colMonth
+ORDER BY Origin,colYear,colMonth;
+
+/* CONSULTA 4 */
+SELECT
+	usairports.City,
+    colYear,
+    colMonth,
+    AVG(ArrDelay) AS 'prom_arribades'
+FROM
+	usairlineflights2.flights
+    INNER JOIN usairlineflights2.usairports
+		ON usairports.IATA = flights.Origin
+GROUP BY usairports.City,colYear,colMonth
+ORDER BY usairports.City,colYear,colMonth;
+
+/* CONSULTA 5 */
+SELECT
+	UniqueCarrier,
+    colYear,
+    colMonth,
+    SUM(Cancelled) AS 'total_cancelled'
+FROM
+	usairlineflights2.flights
+GROUP BY UniqueCarrier,colYear,colMonth
+ORDER BY SUM(Cancelled) DESC;
+
+/* CONSULTA 6 */
+SELECT
+	TailNum,
+    SUM(Distance) AS 'totalDistance'
+FROM
+	usairlineflights2.flights
+WHERE
+	TailNum <> ''
+GROUP BY TailNum
+ORDER BY SUM(Distance) DESC
+LIMIT 10;
+
+
+/* CONSULTA 7 */
+SELECT
+	UniqueCarrier,
+    AVG(ArrDelay) AS 'avgDelay'
+FROM
+	usairlineflights2.flights
+WHERE
+	Cancelled = 0
+GROUP BY UniqueCarrier
+HAVING AVG(ArrDelay) > 10
+ORDER BY AVG(ArrDelay) DESC
